@@ -69,3 +69,18 @@ def read_video_pyav(video_path, num_frm=8):
 
         frames = [frames[i] for i in indices]
     return np.stack([x.to_ndarray(format="rgb24") for x in frames])
+
+
+def read_video_bytes_pyav(video_bytes, num_frm=8, format='mp4'):
+    container = av.open(video_bytes, format=format)
+    frames = record_video_length_packet(container)
+    total_frames = len(frames)
+    sampled_frm = min(total_frames, num_frm)
+    indices = np.linspace(0, total_frames - 1, sampled_frm, dtype=int)
+
+    # Append the last frame index if not already included
+    if total_frames - 1 not in indices:
+        indices = np.append(indices, total_frames - 1)
+
+    frames = [frames[i] for i in indices]
+    return np.stack([x.to_ndarray(format="rgb24") for x in frames])

@@ -3,7 +3,7 @@ import argparse
 import torch
 from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer, CLIPImageProcessor
 from huggingface_hub import snapshot_download
-from PIL import Image  
+from PIL import Image
 
 from src.xtuner.xtuner.utils import DEFAULT_IMAGE_TOKEN, IMAGE_TOKEN_INDEX, PROMPT_TEMPLATE
 from src.xtuner.xtuner.model.aurora import AuroraEncoder, AuroraModel
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     parser.add_argument('--num_beams', type=int, help='number of beams', default=1)
     parser.add_argument('--max_new_tokens', type=int, help='max new tokens', default=2048)
     args = parser.parse_args()
-    
+
     pretrained_pth = snapshot_download(repo_id=args.model_path) if not osp.isdir(args.model_path) else args.model_path
     pretrained_vit = osp.join(pretrained_pth, "visual_encoder")
     projector_path = osp.join(pretrained_pth, "projector")
@@ -95,4 +95,5 @@ if __name__ == "__main__":
         max_new_tokens=args.max_new_tokens,
     )
     text_outputs = tokenizer.batch_decode(cont, skip_special_tokens=True)[0]
+    print(type(text_outputs))
     print(text_outputs)
